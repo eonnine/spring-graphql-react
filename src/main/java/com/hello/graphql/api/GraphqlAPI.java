@@ -1,4 +1,4 @@
-package com.hello.graphql.config;
+package com.hello.graphql.api;
 
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 
@@ -9,14 +9,13 @@ import javax.annotation.PostConstruct;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import com.hello.graphql.sample.AllCitiesDataFetcher;
 import com.hello.graphql.sample.CityDataFetcher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
@@ -25,16 +24,20 @@ import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 
-@Configuration
-public class GraphqlConfig {
+@Component
+public class GraphqlAPI {
 
   @Autowired private CityDataFetcher cityDataFetcher;
-  @Autowired private AllCitiesDataFetcher allCitiesDataFetcher;
 
   private GraphQL graphQL;
 
   @Value("classpath:graphql/schema.graphqls") 
   Resource resource;
+
+  @Bean 
+  public GraphQL graphQL() {
+      return graphQL;
+  }
 
   @PostConstruct
   public void init() throws IOException {
@@ -55,15 +58,9 @@ public class GraphqlConfig {
       return RuntimeWiring.newRuntimeWiring()
               .type(
                 newTypeWiring("Query")
-                .dataFetcher("allCities", allCitiesDataFetcher)
-                .dataFetcher("city", cityDataFetcher)
-              ).
-              build();
+                .dataFetcher("allCities", cityDataFetcher.getCities())
+                .dataFetcher("city", cityDataFetcher.getCity())
+              )
+              .build();
   }
-
-  @Bean 
-  public GraphQL graphQL() {
-      return graphQL;
-  }
-  
 }

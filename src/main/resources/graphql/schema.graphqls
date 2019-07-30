@@ -1,10 +1,20 @@
-schema {
-  query: Query
-}
-
 type Query {
+  bookById(id: ID): Book 
   allCities: [City]
   city(id: Int): City
+}
+
+type Book {
+  id: ID
+  name: String
+  pageCount: Int
+  author: Author
+}
+
+type Author {
+  id: ID
+  firstName: String
+  lastName: String
 }
 
 type City {

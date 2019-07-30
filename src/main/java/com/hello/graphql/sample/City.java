@@ -14,7 +14,7 @@ public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
 
     private String name;
     private int population;
@@ -22,17 +22,17 @@ public class City {
     public City() {
     }
 
-    public City(Long id, String name, int population) {
+    public City(int id, String name, int population) {
         this.id = id;
         this.name = name;
         this.population = population;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
